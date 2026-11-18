@@ -2,11 +2,11 @@ import { apiFetch } from '@/lib/api';
 import { Author } from '@/types';
 
 export const authorActions = {
-  getAll: () => apiFetch<Author[]>('/authors'),
+  getAll: () => apiFetch<Author[]>('/author'),
   create: (data: Omit<Author, 'id'>) =>
-    apiFetch<Author>('/authors', { method: 'POST', body: JSON.stringify(data) }),
+    apiFetch<Author>('/author', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: number, data: Partial<Author>) =>
-    apiFetch<Author>(`/authors/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    apiFetch<Author>(`/author/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   remove: (id: number) =>
-    apiFetch(`/authors/${id}`, { method: 'DELETE' }),
+    apiFetch(`/author/${id}`, { method: 'DELETE' }),
 };

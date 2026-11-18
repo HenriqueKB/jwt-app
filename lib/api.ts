@@ -23,6 +23,7 @@ export const clearSession = () => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('token');
     localStorage.removeItem('user');
     document.cookie = 'biblioteca_session=; path=/; max-age=0';
     window.location.href = '/login';
@@ -33,9 +34,11 @@ export async function apiFetch<T = any>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const accessToken =
+  const rawToken =
     typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-
+  const accessToken =
+    rawToken && rawToken !== 'undefined' && rawToken !== 'null' ? rawToken : null;  
+    
   const headers = new Headers(options.headers || {});
   if (!headers.has('Content-Type') && options.body) {
     headers.set('Content-Type', 'application/json');

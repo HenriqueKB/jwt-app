@@ -17,19 +17,20 @@ export const bookActions = {
     if (filters?.available) params.set('available', 'true');
 
     const query = params.toString();
-    return apiFetch<Book[]>(`/books${query ? `?${query}` : ''}`);
+    return apiFetch<Book[]>(`/book${query ? `?${query}` : ''}`);
   },
   create: (data: {
     title: string;
     isbn: string;
+    description?: string;
     year: number;
     totalCopies: number;
     availableCopies: number;
     categoryId: number;
     authorIds: number[];
-  }) => apiFetch<Book>('/books', { method: 'POST', body: JSON.stringify(data) }),
+  }) => apiFetch<Book>('/book', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: number, data: any) =>
-    apiFetch<Book>(`/books/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    apiFetch<Book>(`/book/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   remove: (id: number) =>
-    apiFetch(`/books/${id}`, { method: 'DELETE' }),
+    apiFetch(`/book/${id}`, { method: 'DELETE' }),
 };

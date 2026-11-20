@@ -1,5 +1,11 @@
 # Biblioteca UNIPAR — Aplicação Web (`jwt-app`)
 
+## LINK DO VÍDEO SOBRE O SISTEMA:
+
+https://youtu.be/vi5h28YWeLE
+
+---
+
 Interface web do **Sistema de Gestão de Biblioteca** desenvolvida com **Next.js (App Router)**, **TypeScript** e **Tailwind CSS**, integrada à API REST (`jwt-api`) com renovação automática de sessão via **Refresh Token**.
 
 ---

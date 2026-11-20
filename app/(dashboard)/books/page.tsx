@@ -34,6 +34,12 @@ export default function BooksPage() {
   const [authorIds, setAuthorIds] = useState<number[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
+  const getAuthorId = (author: any): number =>
+    Number(author.id ?? author.Id ?? author.authorId);
+
+  const getCategoryId = (cat: any): number =>
+    Number(cat.id ?? cat.Id ?? cat.categoryId);
+
   const loadBooks = async (filters?: BookFilters) => {
     try {
       setLoading(true);
@@ -96,9 +102,6 @@ export default function BooksPage() {
     );
   };
 
-const getAuthorId = (author: any): number =>
-    Number(author.id ?? author.Id ?? author.authorId);
-
   const resetForm = () => {
     setEditingId(null);
     setTitle('');
@@ -125,25 +128,27 @@ const getAuthorId = (author: any): number =>
     const currentCatId =
       (book as any).categoryId ??
       (book as any).Category?.id ??
+      (book as any).Category?.Id ??
       (book as any).category?.id ??
+      (book as any).category?.Id ??
       '';
     setCategoryId(currentCatId ? String(currentCatId) : '');
 
-const rawAuthors = (book as any).Authors ?? (book as any).authors ?? [];
+    const rawAuthors = (book as any).Authors ?? (book as any).authors ?? [];
     setAuthorIds(
       Array.isArray(rawAuthors)
         ? rawAuthors.map((a: any) => getAuthorId(a)).filter((id) => !Number.isNaN(id))
         : []
-    )
-};
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
-    if (!categoryId) {
-      setError('Selecione uma categoria.');
+    if (!categoryId || Number.isNaN(Number(categoryId))) {
+      setError('Selecione uma categoria válida.');
       return;
     }
 
@@ -202,7 +207,8 @@ const rawAuthors = (book as any).Authors ?? (book as any).authors ?? [];
     const direct = (book as any).Category?.name || (book as any).category?.name;
     if (direct) return direct;
     const catId = (book as any).categoryId;
-    return categories.find((c) => c.id === catId)?.name || '-';
+    if (!catId) return '-';
+    return categories.find((c) => getCategoryId(c) === Number(catId))?.name || '-';
   };
 
   const getAuthorsNames = (book: Book) => {
@@ -281,11 +287,14 @@ const rawAuthors = (book as any).Authors ?? (book as any).authors ?? [];
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                 <option value="">Selecione uma categoria...</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
+                {categories.map((cat) => {
+                  const cId = getCategoryId(cat);
+                  return (
+                    <option key={cId} value={cId}>
+                      {cat.name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 
@@ -359,7 +368,7 @@ const rawAuthors = (book as any).Authors ?? (book as any).authors ?? [];
                 </p>
               ) : (
                 <div className="flex flex-wrap gap-2">
-                 {authors.map((author) => {
+                  {authors.map((author) => {
                     const aId = getAuthorId(author);
                     const selected = authorIds.includes(aId);
                     return (
@@ -436,11 +445,14 @@ const rawAuthors = (book as any).Authors ?? (book as any).authors ?? [];
             className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg text-slate-800 bg-white"
           >
             <option value="">Todas</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
+            {categories.map((cat) => {
+              const cId = getCategoryId(cat);
+              return (
+                <option key={cId} value={cId}>
+                  {cat.name}
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -454,11 +466,14 @@ const rawAuthors = (book as any).Authors ?? (book as any).authors ?? [];
             className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg text-slate-800 bg-white"
           >
             <option value="">Todos</option>
-            {authors.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name}
-              </option>
-            ))}
+            {authors.map((a) => {
+              const aId = getAuthorId(a);
+              return (
+                <option key={aId} value={aId}>
+                  {a.name}
+                </option>
+              );
+            })}
           </select>
         </div>
 
